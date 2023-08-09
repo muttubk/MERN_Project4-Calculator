@@ -9,7 +9,7 @@ display.addEventListener('focus', function(){
 })
 
 function getNumber(x){
-    if(display.value==0){
+    if(display.value=='0'){
         display.value="";
     }
     //appending the input to result container
