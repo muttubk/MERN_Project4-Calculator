@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <h4>calc</h4>
+        <div class="result-wrapper">
+            <input type="text" name="result" id="result-wrapper" value="0">
+        </div>
+        <div class="buttons-container">
+            <button class="btn" id="7" onclick="getNumber(7)">7</button>
+            <button class="btn" id="8" onclick="getNumber(8)">8</button>
+            <button class="btn" id="9" onclick="getNumber(9)">9</button>
+            <button class="btn" id="del" onclick="del()">DEL</button>
+            <button class="btn" id="4" onclick="getNumber(4)">4</button>
+            <button class="btn" id="5" onclick="getNumber(5)">5</button>
+            <button class="btn" id="6" onclick="getNumber(6)">6</button>
+            <button class="btn" id="add" onclick="getOperator('+')">+</button>
+            <button class="btn" id="1" onclick="getNumber(1)">1</button>
+            <button class="btn" id="2" onclick="getNumber(2)">2</button>
+            <button class="btn" id="3" onclick="getNumber(3)">3</button>
+            <button class="btn" id="sub" onclick="getOperator('-')">-</button>
+            <button class="btn" id="dot" onclick="getDot('.')">.</button>
+            <button class="btn" id="0" onclick="getNumber(0)">0</button>
+            <button class="btn" id="divide" onclick="getOperator('/')">/</button>
+            <button class="btn" id="multiply" onclick="getOperator('x')">x</button>
+            <button class="btn" id="reset" onclick="reset()">RESET</button>
+            <button class="btn" id="result" onclick="calculate()">=</button>
+        </div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+</html>
