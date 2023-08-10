@@ -2,104 +2,93 @@
 //And, when using input id="result-wrapper", have to use display.value
 
 let display=document.getElementById('result-wrapper');
-let dotCount=0; //to maintain valid '.' repeataions
-
-display.addEventListener('focus', function(){
-    display.value="";
-})
 
 function getNumber(x){
-    if(display.value=='0'){
-        display.value="";
-    }
-    //appending the input to result container
     display.value+=x;
 }
 
+let dotCount=0;
 function getDot(x){
-    if(dotCount==0){
+    if((display.value=='')||('+-x/'.includes(display.value.slice(-1)))){
+        display.value+='0'+x;
+        dotCount++;
+    }else if(display.value.slice(-1)=='.'){
+        display.value=display.value;
+    } else if(dotCount==0){
         display.value+=x;
-        dotCount=1;
-        console.log(display.value)
+        dotCount++;
     }
 }
 
 function getOperator(x){
-    let newValue=display.value;
-    if((newValue==0)&&(x=='-')){
-        display.value=x;
-    } else if(newValue=='-'){
+    if(display.value==''){
+        if(x=='-'){
+            display.value=x;
+        }else{
+            display.value='';
+        }
+    }else if(display.value=='-'){
         display.value='-';
     }
-    else if(newValue!='0'){
-        // ! new added
-        if('x/'.includes(newValue.slice(-1))){
-            if(x=='-'){
-                display.value+=x;
-            }
-        }
-        //restrict repeatition of the operator
-        if('+-x/'.includes(newValue.slice(-1))){
-            //!new added
-            if('x/'.includes(newValue.slice(-2,-1))){
-                if(x=='-'){
-                    display.innerText+=x;
-                }
-                else{
-                    del();
-                }
-            }
-            //!till here
-            del();
+    else if('+-x/'.includes(display.value.slice(-1))){
+        if(('x/'.includes(display.value.slice(-1)))&&(x=='-')){
+            display.value+=x;
+        }else if('x/'.includes(display.value.slice(-2,-1))){
+            // del();
+            // del() instead use below
+            display.value=display.value.slice(0,-2);
             display.value+=x;
         }
-        //if there is no operator already, append it
-        else{
+        // del()  instead used below
+        display.value=display.value.slice(0,-1);
         display.value+=x;
-        }
-        dotCount=0;
     }
-}
-
-function del(){
-    let newValue=display.value;
-    //removing last element from result container
-    display.value=newValue.slice(0,-1);
-    //if the result container becomes empty, set default 0
-    if(display.value==''){
-        display.value=0;
+    else{ 
+        display.value+=x;
     }
-
-    if((newValue.slice(-1))=='.'){
-        dotCount=0;
-    }
-}
-
-function reset(){
-    //remove complete content and set default 0 to result container
-    display.value=0;
     dotCount=0;
 }
 
+function del(){
+        if(display.value.slice(-1)=='.'){
+            dotCount=0;
+        }
+        //replaced, '+-'.includes(display.value.slice(-1)) , with display.value.slice(-1)=='-'
+        else if(('x/'.includes(display.value.slice(-2,-1)))&&(display.value.slice(-1)=='-')){
+            dotCount=0;
+        }
+        else if('+-x/'.includes(display.value.slice(-1))){
+            dotCount++;
+        }
+        display.value=display.value.slice(0,-1);
+}
+
+function reset(){
+    display.value='';
+    dotCount=0;
+}
+
+
 function calculate(){
-    let str=display.value;
-    let number='';
-    //since 'x' is not valid for 'eval()', replacing 'x' with '*'
-    if(str.includes('x')){
-        number=str.slice(0,str.indexOf('x'))+'*'+str.slice(str.indexOf('x')+1);
-    }else{
-        number=str;
+    let numberStr='';
+    if(display.value.includes('x')){
+        let part=display.value;
+        numberStr=part.slice(0,part.indexOf('x'))+'*'+part.slice(part.indexOf('x')+1)
     }
-    //final calculation
-    let result=eval(number)
-    if(isNaN(result)){
-        display.value='';
-    }else{
+    else{
+        numberStr=display.value;
+    }
+    let result=eval(numberStr);
+    if(!isNaN(result)){
         display.value=result;
     }
-    operatorCount=0;
-    if((result.toString()).includes('.')){
+    else{
+        display.value='';
+    }
+    if(result.toString().includes('.')){
         dotCount=1;
-        // console.log('hello')
+    }
+    else{
+        dotCount=0;
     }
 }
