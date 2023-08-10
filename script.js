@@ -9,37 +9,39 @@ function getNumber(x){
 
 let dotCount=0;
 function getDot(x){
+    // if entered '.' directly, print 0.
     if((display.value=='')||('+-x/'.includes(display.value.slice(-1)))){
         display.value+='0'+x;
         dotCount++;
-    }else if(display.value.slice(-1)=='.'){
-        display.value=display.value;
-    } else if(dotCount==0){
+    }
+    // if no '.' used already
+    else if(dotCount==0){
         display.value+=x;
         dotCount++;
     }
 }
 
 function getOperator(x){
+    // if entered '-' directly at initial
     if(display.value==''){
         if(x=='-'){
             display.value=x;
-        }else{
-            display.value='';
         }
-    }else if(display.value=='-'){
+    }       
+    else if(display.value=='-'){
         display.value='-';
     }
     else if('+-x/'.includes(display.value.slice(-1))){
+        // print '-' only if previous operator is 'x' or '/'
         if(('x/'.includes(display.value.slice(-1)))&&(x=='-')){
             display.value+=x;
-        }else if('x/'.includes(display.value.slice(-2,-1))){
-            // del();
-            // del() instead use below
+        }
+        // if input other than '-', & previous op is 'x' or '/', change to new op
+        else if('x/'.includes(display.value.slice(-2,-1))){
             display.value=display.value.slice(0,-2);
             display.value+=x;
         }
-        // del()  instead used below
+        // not repeating operators
         display.value=display.value.slice(0,-1);
         display.value+=x;
     }
@@ -71,6 +73,7 @@ function reset(){
 
 function calculate(){
     let numberStr='';
+    // replacing 'x' with '*', because 'x' is invalid in eval()
     if(display.value.includes('x')){
         let part=display.value;
         numberStr=part.slice(0,part.indexOf('x'))+'*'+part.slice(part.indexOf('x')+1)
