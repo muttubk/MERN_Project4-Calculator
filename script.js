@@ -26,16 +26,39 @@ function getDot(x){
 
 function getOperator(x){
     let newValue=display.value;
-    //restrict repeatition of the operator
-    if('+-x/'.includes(newValue.slice(-1))){
-        del();
-        display.value+=x;
+    if((newValue==0)&&(x=='-')){
+        display.value=x;
+    } else if(newValue=='-'){
+        display.value='-';
     }
-    //if there is no operator already, append it
-    else{
+    else if(newValue!='0'){
+        // ! new added
+        if('x/'.includes(newValue.slice(-1))){
+            if(x=='-'){
+                display.value+=x;
+            }
+        }
+        //restrict repeatition of the operator
+        if('+-x/'.includes(newValue.slice(-1))){
+            //!new added
+            if('x/'.includes(newValue.slice(-2,-1))){
+                if(x=='-'){
+                    display.innerText+=x;
+                }
+                else{
+                    del();
+                }
+            }
+            //!till here
+            del();
+            display.value+=x;
+        }
+        //if there is no operator already, append it
+        else{
         display.value+=x;
+        }
+        dotCount=0;
     }
-    dotCount=0;
 }
 
 function del(){
@@ -69,9 +92,14 @@ function calculate(){
     }
     //final calculation
     let result=eval(number)
-    display.value=result;
+    if(isNaN(result)){
+        display.value='';
+    }else{
+        display.value=result;
+    }
     operatorCount=0;
-    if(result.includes('.')){
+    if((result.toString()).includes('.')){
         dotCount=1;
+        // console.log('hello')
     }
 }
