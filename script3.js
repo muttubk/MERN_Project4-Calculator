@@ -75,33 +75,108 @@ function reset(){
     display.placeholder='';
 }
 
+function convertToArray(a){
+    // let a='-1+2/-4+33-3x-5-6+2'
+    let b=Array.from(a)
+    let c=[]
+    let j=0;
+    // console.log(b)
+    for(let i=0;i<a.length;i++){
+        if(i==0 && a[0]=='-'){
+            c[j]='-';
+        }
+        else if(!('+-x/'.includes(a[i]))){
+            // console.log(i)
+            if(c[j]==undefined){
+                c[j]='';
+            }
+            c[j]+=a[i];
+        }else if(a[i+1]=='-'){
+            j++;
+            c[j]=a[i];
+            j++;
+            c[j]='-'
+            i++;
+        }else{
+            j++;
+            c[j]=a[i];
+            j++;
+        }
+        // console.log(a[i])
+    }
+    for(let i=0;i<c.length;i+=2){
+        c[i]= Number(c[i]);
+    }
+    console.log(c)
+    return c;
+}
+
+function evaluate(expressionString){
+    let expressionArray=convertToArray(expressionString);
+    const operators={'+':1, '-':1, 'x':2, '/':2};
+    const stack=[];
+    for(const token of expressionArray){
+        
+        if(!isNaN(token)){
+            stack.push(token)
+        }else {
+            while(stack.length && operators[stack[stack.length-2]]>=operators[token]){
+                const op2=stack.pop();
+                const oper=stack.pop();
+                const op1=stack.pop();
+                // console.log("Performing:", op1, oper, op2);
+                if(oper==='+'){
+                    stack.push(op1+op2)
+                }else if(oper==='-'){
+                    stack.push(op1-op2);
+                }else if(oper==='x'){
+                    stack.push(op1*op2);
+                }else if(oper==='/'){
+                    stack.push(op1/op2);
+                }
+            }
+            stack.push(token);
+        }
+        // console.log(stack)
+    }
+    // console.log(stack)
+    while(stack.length>1){
+        const op2=stack.pop();
+        const oper=stack.pop();
+        const op1=stack.pop();
+        // console.log(op1, oper, op2);
+        if(oper==='+'){
+            stack.push(op1+op2)
+        }else if(oper==='-'){
+            stack.push(op1-op2);
+        }else if(oper==='x'){
+            stack.push(op1*op2);
+        }else if(oper==='/'){
+            stack.push(op1/op2);
+        }
+    }
+    // result=stack[0];
+    return stack[0];
+    
+    // console.log(typeof result)
+}
 
 function calculate(){
-    let numberStr='';
-    // replacing 'x' with '*', because 'x' is invalid in eval()
-    if(display.value.includes('x')){
-        let part=display.value;
-        numberStr=part.slice(0,part.indexOf('x'))+'*'+part.slice(part.indexOf('x')+1)
-    }
-    else{
-        numberStr=display.value;
-    }
-    // let result=eval(numberStr);
     if(display.value.slice(-2)=='/0'){
         display.value='';
         display.placeholder='Cannot divide by 0';
     }
     else if('+-x/'.includes(display.value.slice(-1))){
         if('x/'.includes(display.value.slice(-2,-1))){
-            result=eval(numberStr.slice(0,-2));
+            result=evaluate(display.value.slice(0,-2))
             display.value=result;
         }else{
-            result=eval(numberStr.slice(0,-1));
-            display.value=result;
+            result=evaluate(display.value.slice(0,-1))
+        display.value=result;
         }
     }
     else{
-        result=eval(numberStr);
+        result=evaluate(display.value);
         display.value=result;
     }
     if(result.toString().includes('.')){
@@ -111,3 +186,7 @@ function calculate(){
         dotCount=0;
     }
 }
+
+// 12+3x-2-5+2/-1+3
+// 65+6x-3-3+12/-
+// -65+6x-3-3+12/
